@@ -32,6 +32,10 @@
                             <groupId>org.mule.modules</groupId>
                             <artifactId>mule-module-sfdc</artifactId>
                         </inclusion>
+                        <inclusion>
+						    <groupId>mysql</groupId>
+						    <artifactId>mysql-connector-java</artifactId>
+						</inclusion>
                     </inclusions>
                 </configuration>
 			</plugin>
