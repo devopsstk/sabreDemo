@@ -53,7 +53,7 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
             <schedulers:cron-scheduler expression="${cron.contacts.post}" timeZone="America/Chicago"/>
             <logger level="INFO" doc:name="Logger" message="client"/>
     	</poll>
-        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
             <db:parameterized-query><![CDATA[select id as external_id__c, first_name as FirstName, last_name as LastName, email, telephone as Phone from contacts]]></db:parameterized-query>
         </db:select>
         <dw:transform-message doc:name="Transform Message" metadata:id="527331c5-7ac2-46a4-84f8-da05f860e23c">
