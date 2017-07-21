@@ -10,13 +10,15 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
     
-    <!-- 
-    <db:generic-config name="Generic_Database_Configuration" url="jdbc:postgresql://sabre-demo.caipvt2o8ihq.us-west-1.rds.amazonaws.com:5432/sabre?user=sabredbuser&amp;password=Softtek.001" driverClassName="org.postgresql.Driver" doc:name="Generic Database Configuration"/>
-    --> 
+    
+    <db:generic-config name="Generic_Database_Configuration" url="jdbc:postgresql://${pgsql.host}:${pgsql.port}/${pgsql.db}?user=${pgsql.user}&amp;password=${pgsql.password}" driverClassName="org.postgresql.Driver" doc:name="Generic Database Configuration"/>
+     
     
     <http:request-config name="HTTP_Request_Configuration" host="softtek-mule-demo-proxy.cloudhub.io"  basePath="/" doc:name="HTTP Request Configuration" port="80"/>
-    <db:mysql-config name="MySQL_Configuration" host="${mysql.host}" port="${mysql.port}" user="${mysql.user}" password="${mysql.password}" database="${mysql.db}" doc:name="MySQL Configuration"/>
     
+    <!-- 
+    <db:mysql-config name="MySQL_Configuration" host="${mysql.host}" port="${mysql.port}" user="${mysql.user}" password="${mysql.password}" database="${mysql.db}" doc:name="MySQL Configuration"/>
+    -->
 
 	<!--     
     <spring:beans>
