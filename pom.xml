@@ -37,6 +37,14 @@
   							<artifactId>force-wsc</artifactId>
                         </inclusion>
                         <inclusion>
+				        	<groupId>com.force.api</groupId>
+							  <artifactId>force-metadata-api</artifactId>
+				        </inclusion>
+				        <inclusion>
+				        	<groupId>com.force.api</groupId>
+							  <artifactId>force-partner-api</artifactId>
+				        </inclusion>
+                        <inclusion>
 						    <groupId>mysql</groupId>
 						    <artifactId>mysql-connector-java</artifactId>
 						</inclusion>
@@ -196,6 +204,16 @@
         <dependency>
         	<groupId>com.force.api</groupId>
 			  <artifactId>force-wsc</artifactId>
+			  <version>39.0.0</version>
+        </dependency>
+        <dependency>
+        	<groupId>com.force.api</groupId>
+			  <artifactId>force-metadata-api</artifactId>
+			  <version>39.0.0</version>
+        </dependency>
+        <dependency>
+        	<groupId>com.force.api</groupId>
+			  <artifactId>force-partner-api</artifactId>
 			  <version>39.0.0</version>
         </dependency>
     <dependency>
