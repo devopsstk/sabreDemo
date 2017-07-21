@@ -33,6 +33,10 @@
                             <artifactId>mule-module-sfdc</artifactId>
                         </inclusion>
                         <inclusion>
+                        	<groupId>com.force.api</groupId>
+  							<artifactId>force-wsc</artifactId>
+                        </inclusion>
+                        <inclusion>
 						    <groupId>mysql</groupId>
 						    <artifactId>mysql-connector-java</artifactId>
 						</inclusion>
@@ -188,6 +192,11 @@
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-sfdc</artifactId>
             <version>8.3.0</version>
+        </dependency>
+        <dependency>
+        	<groupId>com.force.api</groupId>
+			  <artifactId>force-wsc</artifactId>
+			  <version>39.0.0</version>
         </dependency>
     <dependency>
             <groupId>com.mulesoft.munit</groupId>
