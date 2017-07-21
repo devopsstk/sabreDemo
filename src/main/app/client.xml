@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:schedulers="http://www.mulesoft.org/schema/mule/schedulers" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/schedulers http://www.mulesoft.org/schema/mule/schedulers/current/mule-schedulers.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+    
+    <!-- 
+    <db:generic-config name="Generic_Database_Configuration" url="jdbc:postgresql://sabre-demo.caipvt2o8ihq.us-west-1.rds.amazonaws.com:5432/sabre?user=sabredbuser&amp;password=Softtek.001" driverClassName="org.postgresql.Driver" doc:name="Generic Database Configuration"/>
+    --> 
+    
+    <http:request-config name="HTTP_Request_Configuration" host="softtek-mule-demo-proxy.cloudhub.io"  basePath="/" doc:name="HTTP Request Configuration" port="80"/>
+    <db:mysql-config name="MySQL_Configuration" host="${mysql.host}" port="${mysql.port}" user="${mysql.user}" password="${mysql.password}" database="${mysql.db}" doc:name="MySQL Configuration"/>
+    
+
+	<!--     
+    <spring:beans>
+        <spring:bean id="Postgres-jdbcDataSource" class="org.enhydra.jdbc.standard.StandardDataSource" destroy-method="shutdown">
+            <spring:property name="driverName" value="org.postgresql.Driver"/>
+            <spring:property name="url" value="jdbc:postgresql://sabre-demo.caipvt2o8ihq.us-west-1.rds.amazonaws.com:5432/sabre?user=sabredbuser&amp;password=Softtek.001"/>
+        </spring:bean>
+    </spring:beans>
+    <db:generic-config name="Generic_Database_Configuration" dataSource-ref="Postgres-jdbcDataSource" doc:name="Generic Database Configuration"/>
+     -->
+   
+    <flow name="getContactsSalesforce">
+        
+        <poll doc:name="Poll">
+            <schedulers:cron-scheduler expression="${cron.contacts.get}" timeZone="America/Chicago"/>
+            <logger level="INFO" doc:name="Logger" message="client"/>
+    	</poll>
+        
+        
+	   <http:request config-ref="HTTP_Request_Configuration" path="/contacts" method="GET" doc:name="HTTP"/>        
+       
+       <object-to-string-transformer doc:name="Object to String"/>
+         
+       <logger level="INFO" doc:name="Logger" message="payload: #[payload]"/>
+		
+        
+    </flow>
+    
+    <flow name="sendContactsSalesforce">
+        
+        <poll doc:name="Poll">
+            <schedulers:cron-scheduler expression="${cron.contacts.post}" timeZone="America/Chicago"/>
+            <logger level="INFO" doc:name="Logger" message="client"/>
+    	</poll>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select id as external_id__c, first_name as FirstName, last_name as LastName, email, telephone as Phone from contacts]]></db:parameterized-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message" metadata:id="527331c5-7ac2-46a4-84f8-da05f860e23c">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map ((payload01 , indexOfPayload01) -> {
+	first_name: payload01.FirstName,
+	last_name: payload01.LastName,
+	email: payload01.email,
+	telephone: payload01.Phone,
+	id: payload01.external_id__c
+})]]></dw:set-payload>
+        </dw:transform-message>
+        
+        
+        <!-- 
+        <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from Contacts]]></db:parameterized-query>
+        </db:select>
+         -->
+        
+	  <logger level="INFO" doc:name="Logger" message="payload: #[payload]"/>
+	  
+      <http:request config-ref="HTTP_Request_Configuration" path="/contacts" method="POST" doc:name="HTTP"/>
+        
+        
+    </flow>
+    
+    
+</mule>

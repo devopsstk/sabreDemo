@@ -1,0 +1,26 @@
+#%RAML 0.8
+title: Softtek Mule Demo
+version: 1.0
+baseUri: http://softtek-mule-demo-app.cloudhub.io/api
+
+
+/contacts:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              [{"first Name":"jaime", "Last Name": "Garcia","email": "Beer"}]
+  post:
+    body:
+      application/json:
+        example: |
+          {"first Name":"jaime", "Last Name": "Garcia","email": "Beer"}
+    responses:
+      201:
+        body:
+          application/json:
+            example: |
+              {"message": "Contact added"}
+              
