@@ -7,6 +7,6 @@ node ('mulesoft') {
   	sh 'mvn clean install'
   }
   stage ('deploy') {
-s  	sh 'sudo anypoint-cli --username=jorgegonzales --password=Monster_j5 runtime-mgr cloudhub-application modify hwt ${WORKSPACE}/target/softtek-demo-1.0.0-SNAPSHOT.zip'
+  	sh 'sudo anypoint-cli --username=jorgegonzales --password=Monster_j5 runtime-mgr cloudhub-application modify softtek-mule-demo-app ${WORKSPACE}/target/softtek-demo-1.0.0-SNAPSHOT.zip'
   }
 }
