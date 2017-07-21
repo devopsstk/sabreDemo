@@ -27,6 +27,3 @@ hs_err_pid*
 
 # mvn
 target
-
-# mule
-catalog

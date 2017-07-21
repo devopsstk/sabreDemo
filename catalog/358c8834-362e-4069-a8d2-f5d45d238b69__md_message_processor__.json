@@ -1,0 +1,16 @@
+{
+    "inputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "#_custom_mule_metadata_type_#",
+            "typeId": "list-json"
+        }
+    },
+    "outputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "#_custom_mule_metadata_type_#",
+            "typeId": "contacts-salesforce"
+        }
+    },
+    "id": "358c8834-362e-4069-a8d2-f5d45d238b69",
+    "version": "5.2.0.0"
+}
