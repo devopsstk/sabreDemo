@@ -228,6 +228,12 @@
             <version>${munit.version}</version>
             <scope>test</scope>
         </dependency>
+    <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-spring-config</artifactId>
+            <version>${mule.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 	<repositories>

@@ -56,6 +56,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 %output application/java
 ---
 payload map ((payload01 , indexOfPayload01) -> {
+	firstName: payload01.first_name,
 	FirstName: payload01.first_name,
 	LastName: payload01.last_name,
 	Email: payload01.email,
@@ -67,9 +68,10 @@ payload map ((payload01 , indexOfPayload01) -> {
         <sfdc:upsert config-ref="Salesforce__Basic_Authentication" externalIdFieldName="external_id__c" type="Contact" doc:name="Salesforce">
             <sfdc:objects ref="#[payload]"/>
         </sfdc:upsert>
+        <logger message="sf payload: #[payload]" level="INFO" doc:name="Logger"/>
         
         <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
-        <set-payload value="{ &quot;message&quot;: &quot;Contacts upserted&quot; }" doc:name="Set Payload"/>
+        <set-payload value="{ &quot;message&quot;: &quot;Contacts updated&quot; }" doc:name="Set Payload"/>
         
             
     </flow>
