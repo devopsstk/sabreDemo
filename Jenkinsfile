@@ -5,9 +5,16 @@ node ('mulesoft') {
   }
   stage ('build') {
   	sh 'mvn clean install -DskipTests'
+  	archive "target/*.zip"
   }
   stage ('test') {
   	sh 'mvn test'
+  	post {
+		always {
+		    junit 'target/surefire-reports/*.xml'
+		    archive "target/munit-reports/coverage/**"
+		}
+	  }
   }
   stage ('deploy') {
   	sh 'sudo anypoint-cli --username=jorgegonzales --password=Monster_j5 runtime-mgr cloudhub-application modify softtek-mule-demo-app ${WORKSPACE}/target/softtek-demo-1.0.0-SNAPSHOT.zip'
@@ -28,12 +35,5 @@ node ('mulesoft') {
 	server.upload(artifactoryUploadDsl, buildInfo)
 	server.publishBuildInfo(buildInfo)
 
-  }
-  post {
-	always {
-	    archive "target/*.zip"
-	    junit 'target/surefire-reports/*.xml'
-	    archive "target/munit-reports/coverage/**"
-	}
   }
 }
