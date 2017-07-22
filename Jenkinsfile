@@ -31,20 +31,22 @@ pipeline {
 	  }
 	  stage ('artifactory') {
 	  	steps {
-	  		def server = Artifactory.server 'artifactory'
-	  		def buildInfo = Artifactory.newBuildInfo()
-	  	
-		  	def artifactoryUploadDsl = """{
-				 "files": [
-				  {
-				      "pattern": "target/*.zip",
-				      "target": "sabre/demo/"
-				    }
-				 ]
-				}"""
+	  		script {
+		  		def server = Artifactory.server 'artifactory'
+		  		def buildInfo = Artifactory.newBuildInfo()
 		  	
-			server.upload(artifactoryUploadDsl, buildInfo)
-			server.publishBuildInfo(buildInfo)
+			  	def artifactoryUploadDsl = """{
+					 "files": [
+					  {
+					      "pattern": "target/*.zip",
+					      "target": "sabre/demo/"
+					    }
+					 ]
+					}"""
+			  	
+				server.upload(artifactoryUploadDsl, buildInfo)
+				server.publishBuildInfo(buildInfo)
+			}
 		}
 	
 	  }
