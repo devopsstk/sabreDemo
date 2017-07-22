@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:mock="http://www.mulesoft.org/schema/mule/mock" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/mock/current/mule-mock.xsd">
+    <spring:beans>
+        <spring:import resource="classpath:api.xml" />
+        <spring:bean id="jsonAssertion" name="jsonAssertion" class="com.stk.demo.JsonAssertion"/>
+    </spring:beans>
+    <munit:config mock-connectors="false" mock-inbounds="false" doc:name="MUnit configuration"/>
+    <http:request-config name="test_HTTP_Request_Configuration" host="localhost" port="8081" basePath="/api" doc:name="HTTP Request Configuration"/>
+    <munit:test name="get:/contacts:api-config-200-application/json-FlowTest" description="Verifying functionality of [get:/contacts:api-config-200-application/json]">
+        <mock:when messageProcessor="sfdc:query" doc:name="Salesforce Mock">
+            <mock:then-return payload="[{&quot;FirstName&quot;:&quot;fname&quot;, &quot;LastName&quot;:&quot;lname&quot;, &quot;Email&quot;:&quot;email@email.com&quot;, &quot;Phone&quot;:&quot;123456789&quot;, &quot;external_id__c&quot;:&quot;121212&quot;}]" mimeType="application/json"/>
+        </mock:when>
+
+        <http:request config-ref="test_HTTP_Request_Configuration" method="GET" path="/contacts" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json" />
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string" />
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200" />
+        <set-property propertyName="expectedResult" value="#[getResource('scaffolder/response/get_200_contacts_application_json.json').asString()]" mimeType="application/json" doc:name="Expected result Property"/>
+        <munit:run-custom assertion-ref="jsonAssertion" doc:name="assert that - payload is as expected"/>
+
+    </munit:test>
+    <munit:test name="post:/contacts:application/json:api-config-201-application/json-FlowTest" description="Verifying functionality of [post:/contacts:application/json:api-config-201-application/json]" ignore="true">
+        <set-payload value="#[getResource('scaffolder/request/post_contacts_application_json.json').asString()]" doc:name="Set Payload"/>
+        <http:request config-ref="test_HTTP_Request_Configuration" method="POST" path="/contacts" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Accept" value="application/json" />
+                <http:header headerName="Content-Type" value="application/json" />
+            </http:request-builder>
+        </http:request>
+        <object-to-string-transformer doc:name="http response to string" />
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(201))]" doc:name="assert that - http.status eq 201" />
+        <munit:assert-on-equals message="The response payload is not correct!" expectedValue="#[getResource('scaffolder/response/post_201_contacts_application_json.json').asString()]" actualValue="#[payload]" doc:name="assert that - payload is as expected" />
+    </munit:test>
+</mule>

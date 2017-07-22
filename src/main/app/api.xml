@@ -56,6 +56,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 %output application/java
 ---
 payload map ((payload01 , indexOfPayload01) -> {
+	firstName: payload01.first_name,
 	FirstName: payload01.first_name,
 	LastName: payload01.last_name,
 	Email: payload01.email,
@@ -63,7 +64,6 @@ payload map ((payload01 , indexOfPayload01) -> {
 	external_id__c: payload01.id
 })]]></dw:set-payload>
         </dw:transform-message>
-        <logger message="pre sf payload: #[payload]" level="INFO" doc:name="Logger"/>
         
         <sfdc:upsert config-ref="Salesforce__Basic_Authentication" externalIdFieldName="external_id__c" type="Contact" doc:name="Salesforce">
             <sfdc:objects ref="#[payload]"/>
