@@ -32,8 +32,8 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 ---
 {
 	contacts: payload map ((payload01 , indexOfPayload01) -> {
-		first_name: payload01.FirstName,
-		last_name: payload01.LastName,
+		firstName: payload01.FirstName,
+		lastName: payload01.LastName,
 		email: payload01.Email,
 		telephone: payload01.Phone,
 		id: payload01.external_id__c
