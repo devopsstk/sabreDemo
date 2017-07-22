@@ -57,7 +57,6 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 %output application/java
 ---
 payload map ((payload01 , indexOfPayload01) -> {
-	firstName: payload01.first_name,
 	FirstName: payload01.first_name,
 	LastName: payload01.last_name,
 	Email: payload01.email,
