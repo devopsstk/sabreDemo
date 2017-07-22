@@ -50,7 +50,7 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
     <flow name="sendContactsSalesforce">
         
         <poll doc:name="Poll">
-            <schedulers:cron-scheduler expression="${cron.contacts.post}" timeZone="America/Chicago"/>
+            <fixed-frequency-scheduler frequency="10" timeUnit="SECONDS"/>
             <logger level="INFO" doc:name="Logger" message="client"/>
     	</poll>
         <db:select config-ref="Generic_Database_Configuration" doc:name="Database">
