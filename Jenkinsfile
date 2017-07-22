@@ -9,4 +9,21 @@ node ('mulesoft') {
   stage ('deploy') {
   	sh 'sudo anypoint-cli --username=jorgegonzales --password=Monster_j5 runtime-mgr cloudhub-application modify softtek-mule-demo-app ${WORKSPACE}/target/softtek-demo-1.0.0-SNAPSHOT.zip'
   }
+  stage ('artifactory') {
+  	def server = Artifactory.server 'artifactory'
+  	def buildInfo = Artifactory.newBuildInfo()
+  	
+  	def artifactoryUploadDsl = """{
+		 "files": [
+		  {
+		      "pattern": "target/*.zip",
+		      "target": "sabre/demo/"
+		    }
+		 ]
+		}"""
+  	
+	server.upload(artifactoryUploadDsl, buildInfo)
+	server.publishBuildInfo(buildInfo)
+
+  }
 }
