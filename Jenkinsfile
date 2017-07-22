@@ -1,5 +1,5 @@
 pipeline {
-	agent mulesoft
+	agent { label 'mulesoft' }
 	
 	stages {
 	  stage ('prebuild') {
