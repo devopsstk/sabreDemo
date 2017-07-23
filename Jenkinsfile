@@ -54,19 +54,17 @@ docker push 792971870453.dkr.ecr.us-west-1.amazonaws.com/demoapp:v_${BUILD_NUMBE
       }
     }
     stage('deploy') {
-      agent {
-        label 'docker'
-      }
       steps {
         parallel(
-          "ecs dev deploy": {
-            unstash 'docker'
-            script {
-              wrap([$class: 'AmazonAwsCliBuildWrapper',
-              credentialsId: 'awsCloud',
-              defaultRegion: 'us-west-1']) {
-                
-                sh '''#!/bin/bash
+          "aws deploy": {
+          	node ('docker') {
+	            unstash 'docker'
+	            script {
+	              wrap([$class: 'AmazonAwsCliBuildWrapper',
+	              credentialsId: 'awsCloud',
+	              defaultRegion: 'us-west-1']) {
+	                
+	                sh '''#!/bin/bash
 REGION=us-west-1
 REPOSITORY_NAME=demoapp
 CLUSTER=cloudbeesAgents
@@ -95,6 +93,7 @@ echo "entered new service"
 aws ecs create-service --service-name ${SERVICE_NAME} --desired-count 1 --task-definition ${FAMILY} --cluster ${CLUSTER} --region ${REGION}
 fi
 '''
+			    }	
               }
             }
             
