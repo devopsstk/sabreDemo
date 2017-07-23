@@ -57,6 +57,7 @@ pipeline {
 	  	agent { label 'docker' }
 	  	
 	  	steps {
+	  		unstash 'docker'
 	  		script {
 			    wrap([$class: 'AmazonAwsCliBuildWrapper',
 			         credentialsId: 'awsCloud',
