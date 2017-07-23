@@ -33,8 +33,6 @@ pipeline {
 	      unstash 'docker'
 	      unstash 'target'
 	      sh 'mv target/*.zip docker/'
-	      sh 'docker build -t demoapp docker'
-	      sh 'docker tag demoapp:latest 792971870453.dkr.ecr.us-west-1.amazonaws.com/demoapp:v_${BUILD_NUMBER}'
 	      
 	      wrap([$class: 'AmazonAwsCliBuildWrapper',
 	           credentialsId: 'awsCloud',
@@ -42,6 +40,10 @@ pipeline {
 	
 	          sh '''
 	            $(aws ecr get-login --region us-west-1)
+	            
+	            docker build -t demoapp docker
+	            
+	      		docker tag demoapp:latest 792971870453.dkr.ecr.us-west-1.amazonaws.com/demoapp:v_${BUILD_NUMBER}
 	
 	            docker push 792971870453.dkr.ecr.us-west-1.amazonaws.com/demoapp:v_${BUILD_NUMBER}
 	          '''
