@@ -63,7 +63,7 @@ pipeline {
 			         credentialsId: 'awsCloud',
 			         defaultRegion: 'us-west-1']) {
 			
-			        sh '''
+			        sh '''#!/bin/bash
 REGION=us-west-1
 REPOSITORY_NAME=demoapp
 CLUSTER=cloudbeesAgents
