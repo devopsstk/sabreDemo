@@ -11,6 +11,8 @@ pipeline {
 	  	steps {
 	  		sh 'mvn clean install -DskipTests'
 	  		archive "target/*.zip"
+	  		stash includes: 'docker/**/**', name: 'docker'
+    		stash includes: 'target/**/**', name: 'target'
 	  	}
 	  }
 	  stage ('test') {
@@ -27,6 +29,7 @@ pipeline {
 	  
 	  stage ('docker build') {
 	  	agent { label 'docker' }
+	  	steps {
 	      unstash 'docker'
 	      unstash 'target'
 	      sh 'mv target/*.zip docker/'
@@ -42,17 +45,19 @@ pipeline {
 	
 	            docker push 792971870453.dkr.ecr.us-west-1.amazonaws.com/demoapp:v_${BUILD_NUMBER}
 	          '''
-	     }
+	      }
+	    }
 	  }
 	
 	  stage ('ecs dev deploy') {
 	  	agent { label 'docker' }
 	  	
-	    wrap([$class: 'AmazonAwsCliBuildWrapper',
-	         credentialsId: 'awsCloud',
-	         defaultRegion: 'us-west-1']) {
-	
-	        sh '''
+	  	steps {
+		    wrap([$class: 'AmazonAwsCliBuildWrapper',
+		         credentialsId: 'awsCloud',
+		         defaultRegion: 'us-west-1']) {
+		
+		        sh '''
 REGION=us-west-1
 REPOSITORY_NAME=demoapp
 CLUSTER=cloudbeesAgents
@@ -84,6 +89,7 @@ else
   aws ecs create-service --service-name ${SERVICE_NAME} --desired-count 1 --task-definition ${FAMILY} --cluster ${CLUSTER} --region ${REGION}
 fi
 '''
+	    	}
 	    }
 	  }
 	  stage ('mulesoft deploy') {
