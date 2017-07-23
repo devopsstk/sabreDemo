@@ -1,0 +1,25 @@
+{
+  "networkMode": "bridge",
+  "containerDefinitions": [
+    {
+      "volumesFrom": [],
+      "memory": 128,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 8081,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "mountPoints": [],
+      "name": "demoapp",
+      "environment": [],
+      "image": "%REPOSITORY_URI%:v_%BUILD_NUMBER%",
+      "cpu": 0
+    }
+  ],
+  "placementConstraints": [],
+  "volumes": [],
+  "family": "demoapp-dev"
+}

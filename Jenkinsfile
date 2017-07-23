@@ -24,7 +24,68 @@ pipeline {
 			}
 		  }
 	  }
-	  stage ('deploy') {
+	  stage ('docker build') {
+	  	agent { label 'docker' }
+	      unstash 'docker'
+	      unstash 'target'
+	      sh 'mv target/*.zip docker/'
+	      sh 'docker build -t demoapp docker'
+	      sh 'docker tag demoapp:latest 792971870453.dkr.ecr.us-west-1.amazonaws.com/demoapp:v_${BUILD_NUMBER}'
+	      
+	      wrap([$class: 'AmazonAwsCliBuildWrapper',
+	           credentialsId: 'awsCloud',
+	           defaultRegion: 'us-west-1']) {
+	
+	          sh '''
+	            $(aws ecr get-login --region us-west-1)
+	
+	            docker push 792971870453.dkr.ecr.us-west-1.amazonaws.com/demoapp:v_${BUILD_NUMBER}
+	          '''
+	     }
+	  }
+	
+	  stage ('ecs dev deploy') {
+	  	agent { label 'docker' }
+	  	
+	    wrap([$class: 'AmazonAwsCliBuildWrapper',
+	         credentialsId: 'awsCloud',
+	         defaultRegion: 'us-west-1']) {
+	
+	        sh '''
+REGION=us-west-1
+REPOSITORY_NAME=demoapp
+CLUSTER=cloudbeesAgents
+FAMILY=demoapp-dev
+NAME=demoapp-dev
+SERVICE_NAME=${NAME}-service
+
+#Store the repositoryUri as a variable
+REPOSITORY_URI=`aws ecr describe-repositories --repository-names ${REPOSITORY_NAME} --region ${REGION} | jq .repositories[].repositoryUri | tr -d '"'`
+
+#Replace the build number and respository URI placeholders with the constants above
+sed -e "s;%BUILD_NUMBER%;${BUILD_NUMBER};g" -e "s;%REPOSITORY_URI%;${REPOSITORY_URI};g" docker/taskdef.json > ${NAME}-v_${BUILD_NUMBER}.json
+#Register the task definition in the repository
+aws ecs register-task-definition --family ${FAMILY} --cli-input-json file://${WORKSPACE}/${NAME}-v_${BUILD_NUMBER}.json --region ${REGION}
+SERVICES=`aws ecs describe-services --services ${SERVICE_NAME} --cluster ${CLUSTER} --region ${REGION} | jq .failures[]`
+#Get latest revision
+REVISION=`aws ecs describe-task-definition --task-definition ${NAME} --region ${REGION} | jq .taskDefinition.revision`
+
+#Create or update service
+if [ "$SERVICES" == "" ]; then
+  echo "entered existing service"
+  DESIRED_COUNT=`aws ecs describe-services --services ${SERVICE_NAME} --cluster ${CLUSTER} --region ${REGION} | jq .services[].desiredCount`
+  if [ ${DESIRED_COUNT} = "0" ]; then
+    DESIRED_COUNT="1"
+  fi
+  aws ecs update-service --cluster ${CLUSTER} --region ${REGION} --service ${SERVICE_NAME} --task-definition ${FAMILY}:${REVISION} --desired-count ${DESIRED_COUNT}
+else
+  echo "entered new service"
+  aws ecs create-service --service-name ${SERVICE_NAME} --desired-count 1 --task-definition ${FAMILY} --cluster ${CLUSTER} --region ${REGION}
+fi
+'''
+	    }
+	  
+	  stage ('mulesoft deploy') {
 	  	steps {
 	  		sh 'sudo anypoint-cli --username=jorgegonzales --password=Monster_j5 runtime-mgr cloudhub-application modify softtek-mule-demo-app ${WORKSPACE}/target/softtek-demo-1.0.0-SNAPSHOT.zip'
 	  		slackSend channel: '#demo_deploy', color: 'good', message: 'Deployment to Sandbox environment completed', teamDomain: 'coedevops', token: 'E01HyRsfgvEcsNkXzqIQZhP7'
