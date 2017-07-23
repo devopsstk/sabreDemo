@@ -34,20 +34,22 @@ pipeline {
 	      unstash 'target'
 	      sh 'mv target/*.zip docker/'
 	      
-	      wrap([$class: 'AmazonAwsCliBuildWrapper',
-	           credentialsId: 'awsCloud',
-	           defaultRegion: 'us-west-1']) {
-	
-	          sh '''
-	            $(aws ecr get-login --region us-west-1)
-	            
-	            docker build -t demoapp docker
-	            
-	      		docker tag demoapp:latest 792971870453.dkr.ecr.us-west-1.amazonaws.com/demoapp:v_${BUILD_NUMBER}
-	
-	            docker push 792971870453.dkr.ecr.us-west-1.amazonaws.com/demoapp:v_${BUILD_NUMBER}
-	          '''
-	      }
+	      script {
+		      wrap([$class: 'AmazonAwsCliBuildWrapper',
+		           credentialsId: 'awsCloud',
+		           defaultRegion: 'us-west-1']) {
+		
+		          sh '''
+		            $(aws ecr get-login --region us-west-1)
+		            
+		            docker build -t demoapp docker
+		            
+		      		docker tag demoapp:latest 792971870453.dkr.ecr.us-west-1.amazonaws.com/demoapp:v_${BUILD_NUMBER}
+		
+		            docker push 792971870453.dkr.ecr.us-west-1.amazonaws.com/demoapp:v_${BUILD_NUMBER}
+		          '''
+		      }
+		   }
 	    }
 	  }
 	
@@ -55,11 +57,12 @@ pipeline {
 	  	agent { label 'docker' }
 	  	
 	  	steps {
-		    wrap([$class: 'AmazonAwsCliBuildWrapper',
-		         credentialsId: 'awsCloud',
-		         defaultRegion: 'us-west-1']) {
-		
-		        sh '''
+	  		script {
+			    wrap([$class: 'AmazonAwsCliBuildWrapper',
+			         credentialsId: 'awsCloud',
+			         defaultRegion: 'us-west-1']) {
+			
+			        sh '''
 REGION=us-west-1
 REPOSITORY_NAME=demoapp
 CLUSTER=cloudbeesAgents
@@ -91,6 +94,7 @@ else
   aws ecs create-service --service-name ${SERVICE_NAME} --desired-count 1 --task-definition ${FAMILY} --cluster ${CLUSTER} --region ${REGION}
 fi
 '''
+	    		}
 	    	}
 	    }
 	  }
