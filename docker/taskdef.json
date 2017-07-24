@@ -14,7 +14,10 @@
       "essential": true,
       "mountPoints": [],
       "name": "demoapp",
-      "environment": ["env":"dev"],
+      "environment": [{
+		  "Name" : "env",
+		  "Value" : "dev" 
+		}],
       "image": "%REPOSITORY_URI%:v_%BUILD_NUMBER%",
       "cpu": 0
     }
