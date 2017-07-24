@@ -6,7 +6,9 @@ pipeline {
     stage('prebuild') {
       steps {
         git(credentialsId: 'c8d0bb4e-36db-4983-a29f-35e9f7878869', url: 'https://github.com/devopsstk/sabreDemo.git')
-        testfunciton()
+        script {
+        	testfunciton()
+        }
       }
     }
     stage('build') {
