@@ -11,6 +11,14 @@
           "protocol": "tcp"
         }
       ],
+	    "logConfiguration": {
+	        "logDriver": "awslogs",
+	        "options": {
+	            "awslogs-group": "demoapp-dev",
+	            "awslogs-region": "ap-west-1",
+	            "awslogs-stream-prefix": "demoapp-dev"
+	        }
+	    },
       "essential": true,
       "mountPoints": [],
       "name": "demoapp",
