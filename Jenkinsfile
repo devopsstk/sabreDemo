@@ -104,7 +104,9 @@ fi
           },
           "cloudhub": {
             sh 'sudo anypoint-cli --username=jorgegonzales --password=Monster_j5 runtime-mgr cloudhub-application modify softtek-mule-demo-app ${WORKSPACE}/target/softtek-demo-1.0.0-SNAPSHOT.zip'
-            slackSend(channel: '#demo_deploy', color: 'good', message: 'Deployment to Sandbox environment completed ', teamDomain: 'coedevops', token: 'E01HyRsfgvEcsNkXzqIQZhP7')
+            script {
+            	slackSend(channel: '#demo_deploy', color: 'good', message: 'Deployment to Sandbox environment completed ${BUILD_URL}', teamDomain: 'coedevops', token: 'E01HyRsfgvEcsNkXzqIQZhP7')
+            }
             
           }
         )
@@ -134,7 +136,9 @@ fi
   }
   post {
     failure {
-      slackSend(channel: '#demo_deploy', color: 'bad', message: 'There is an error on the build job ${JENKINS_URL}', teamDomain: 'coedevops', token: 'E01HyRsfgvEcsNkXzqIQZhP7')
+  	  script {
+      	slackSend(channel: '#demo_deploy', color: 'bad', message: 'There is an error on the build job ${BUILD_URL}', teamDomain: 'coedevops', token: 'E01HyRsfgvEcsNkXzqIQZhP7')
+      }
       
     }
     
