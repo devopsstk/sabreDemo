@@ -3,7 +3,7 @@
   "containerDefinitions": [
     {
       "volumesFrom": [],
-      "memoryReservation": 512,
+      "memoryReservation": 768,
       "portMappings": [
         {
           "hostPort": 8081,
