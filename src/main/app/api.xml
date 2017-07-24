@@ -41,6 +41,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 }]]></dw:set-payload>
         </dw:transform-message>
         <logger message="get contacts #[payload]" level="INFO" doc:name="Logger"/>
+        <logger message="sabre demo" level="INFO" doc:name="Logger"/>
         
         
         
