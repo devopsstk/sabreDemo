@@ -6,6 +6,7 @@ pipeline {
     stage('prebuild') {
       steps {
         git(credentialsId: 'c8d0bb4e-36db-4983-a29f-35e9f7878869', url: 'https://github.com/devopsstk/sabreDemo.git')
+        testfunciton()
       }
     }
     stage('build') {
@@ -56,7 +57,7 @@ docker push 792971870453.dkr.ecr.us-west-1.amazonaws.com/demoapp:v_${BUILD_NUMBE
     stage('deploy') {
       steps {
         parallel(
-          "aws deploy": {
+          "aws": {
           	node ('docker') {
 	            unstash 'docker'
 	            script {
@@ -99,7 +100,7 @@ fi
             
             
           },
-          "cloudhub deploy": {
+          "cloudhub": {
             sh 'sudo anypoint-cli --username=jorgegonzales --password=Monster_j5 runtime-mgr cloudhub-application modify softtek-mule-demo-app ${WORKSPACE}/target/softtek-demo-1.0.0-SNAPSHOT.zip'
             slackSend(channel: '#demo_deploy', color: 'good', message: 'Deployment to Sandbox environment completed ', teamDomain: 'coedevops', token: 'E01HyRsfgvEcsNkXzqIQZhP7')
             
@@ -136,4 +137,8 @@ fi
     }
     
   }
+}
+
+def testFunction(){	
+  sh 'echo from function'
 }
