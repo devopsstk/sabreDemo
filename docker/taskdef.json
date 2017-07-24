@@ -15,8 +15,8 @@
       "mountPoints": [],
       "name": "demoapp",
       "environment": [{
-		  "Name" : "env",
-		  "Value" : "dev" 
+		  "name" : "env",
+		  "value" : "dev" 
 		}],
       "image": "%REPOSITORY_URI%:v_%BUILD_NUMBER%",
       "cpu": 0
