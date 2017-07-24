@@ -11,12 +11,13 @@ baseUri: http://softtek-mule-demo-app.cloudhub.io/api
         body:
           application/json:
             example: |
-              [{"first Name":"jaime", "Last Name": "Garcia","email": "Beer"}]
+              [{"first_name": "Jaime", "last_name": "Garcia", "email": "jgarcia@stk.com", "telephone": "555666777", "id": "1234" }]
   post:
     body:
       application/json:
         example: |
-          {"first Name":"jaime", "Last Name": "Garcia","email": "Beer"}
+          {"first_name": "Jaime", "last_name": "Garcia", "email": "jgarcia@stk.com", "telephone": "555666777", "id": "1234" }
+
     responses:
       201:
         body:
