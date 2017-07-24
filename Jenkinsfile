@@ -67,7 +67,7 @@ docker push 792971870453.dkr.ecr.us-west-1.amazonaws.com/demoapp:v_${BUILD_NUMBE
 	                sh '''#!/bin/bash
 REGION=us-west-1
 REPOSITORY_NAME=demoapp
-CLUSTER=cloudbeesAgents
+CLUSTER=cludbeesAgents
 FAMILY=demoapp-dev
 NAME=demoapp-dev
 SERVICE_NAME=${NAME}-service
