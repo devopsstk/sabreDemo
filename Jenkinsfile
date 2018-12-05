@@ -102,7 +102,7 @@ fi
             
           },
           "cloudhub": {
-            sh 'sudo anypoint-cli --username=jorgegonzales --password=Monster_j5 runtime-mgr cloudhub-application modify softtek-mule-demo-app ${WORKSPACE}/target/softtek-demo-1.0.0-SNAPSHOT.zip'
+            sh 'sudo anypoint-cli --username=msardinas1 --password=Sardinas1 runtime-mgr cloudhub-application modify softtek-mule-demo-app ${WORKSPACE}/target/softtek-demo-1.0.0-SNAPSHOT.zip'
             script {
             	slackSend(channel: '#demo_deploy', color: 'good', message: "Deployment to Sandbox environment completed (<${env.RUN_DISPLAY_URL}|Open Build #${env.BUILD_NUMBER}>)", teamDomain: 'coedevops', token: 'E01HyRsfgvEcsNkXzqIQZhP7')
             }
