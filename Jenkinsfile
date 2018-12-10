@@ -43,7 +43,7 @@ pipeline {
           defaultRegion: 'us-west-1']) {
             
             sh '''
-$(aws ecr get-login --region us-west-1)
+$(aws ecr get-login --no-include-email --region us-west-1)
 docker build -t demoapp docker
 docker tag demoapp:latest 792971870453.dkr.ecr.us-west-1.amazonaws.com/demoapp:v_${BUILD_NUMBER}
 docker push 792971870453.dkr.ecr.us-west-1.amazonaws.com/demoapp:v_${BUILD_NUMBER}
