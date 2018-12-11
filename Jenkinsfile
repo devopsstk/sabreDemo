@@ -92,7 +92,7 @@ if [ "$SERVICES" == "" ]; then
 	aws ecs update-service --cluster ${CLUSTER} --region ${REGION} --service ${SERVICE_NAME} --task-definition ${FAMILY}:${REVISION} --desired-count ${DESIRED_COUNT}  
 else
 	echo "entered new service"
-	aws ecs create-service --service-name ${SERVICE_NAME} --desired-count 1 --task-definition ${FAMILY} --cluster ${CLUSTER} --region ${REGION}  --role "ecsServiceRole" --load-balancers "targetGroupArn=arn:aws:elasticloadbalancing:us-west-1:792971870453:loadbalancer/app/demoapp-dev/222520f2608d3d94,containerName=demoapp-dev,containerPort=8081" 
+	aws ecs create-service --service-name ${SERVICE_NAME} --desired-count 1 --task-definition ${FAMILY} --cluster ${CLUSTER} --region ${REGION}  --role "ecsServiceRole" --load-balancers "targetGroupArn=arn:aws:elasticloadbalancing:us-west-1:792971870453:targetgroup/demoapp-dev/ae3425a9f5f2f5ec,containerName=demoapp-dev,containerPort=8081" 
 fi
 '''
 			    }	
