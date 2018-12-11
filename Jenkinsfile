@@ -1,6 +1,11 @@
 pipeline {
   agent {
-    label 'mulesoft'
+    docker {
+        image '792971870453.dkr.ecr.us-west-1.amazonaws.com/mule-agent'
+        label 'latest'
+        registryUrl 'https://792971870453.dkr.ecr.us-west-1.amazonaws.com/'
+        registryCredentialsId 'ecr:us-west-1:awsCloud'
+    }
   }
   stages {
     stage('prebuild') {
@@ -31,7 +36,12 @@ pipeline {
     }
     stage('docker build') {
       agent {
-        label 'docker'
+        docker {
+		image '792971870453.dkr.ecr.us-west-1.amazonaws.com/docker-agent'
+		label 'latest'
+		registryUrl 'https://792971870453.dkr.ecr.us-west-1.amazonaws.com/'
+		registryCredentialsId 'ecr:us-west-1:awsCloud'
+	    }
       }
       steps {
         unstash 'docker'
