@@ -67,7 +67,7 @@ docker push 792971870453.dkr.ecr.us-west-1.amazonaws.com/demoapp:v_${BUILD_NUMBE
 	                sh '''#!/bin/bash
 REGION=us-west-1
 REPOSITORY_NAME=demoapp
-CLUSTER=cludbeesAgents
+CLUSTER=mslab-dev
 FAMILY=demoapp-dev
 NAME=demoapp-dev
 SERVICE_NAME=${NAME}-service
@@ -92,7 +92,7 @@ if [ "$SERVICES" == "" ]; then
 	aws ecs update-service --cluster ${CLUSTER} --region ${REGION} --service ${SERVICE_NAME} --task-definition ${FAMILY}:${REVISION} --desired-count ${DESIRED_COUNT}  
 else
 	echo "entered new service"
-	aws ecs create-service --service-name ${SERVICE_NAME} --desired-count 1 --task-definition ${FAMILY} --cluster ${CLUSTER} --region ${REGION}  --role "ecsServiceRole" --load-balancers "loadBalancerName=demoapp-dev,containerName=demoapp-dev,containerPort=8081" 
+	aws ecs create-service --service-name ${SERVICE_NAME} --desired-count 1 --task-definition ${FAMILY} --cluster ${CLUSTER} --region ${REGION}  --role "ecsServiceRole" --load-balancers "targetGroupArn=arn:aws:elasticloadbalancing:us-west-1:792971870453:targetgroup/demoapp-dev/ae3425a9f5f2f5ec,containerName=demoapp,containerPort=8081" 
 fi
 '''
 			    }	
@@ -143,4 +143,3 @@ fi
     
   }
 }
-
