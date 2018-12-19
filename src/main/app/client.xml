@@ -14,7 +14,7 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
     <db:generic-config name="Generic_Database_Configuration" url="jdbc:postgresql://${pgsql.host}:${pgsql.port}/${pgsql.db}?user=${pgsql.user}&amp;password=${pgsql.password}" driverClassName="org.postgresql.Driver" doc:name="Generic Database Configuration"/>
      
     
-    <http:request-config name="HTTP_Request_Configuration" host="softtek-mule-demo-proxy.cloudhub.io"  basePath="/" doc:name="HTTP Request Configuration" port="80"/>
+    <http:request-config name="HTTP_Request_Configuration" host="softtek-mule-demo-app.us-e2.cloudhub.io"  basePath="/" doc:name="HTTP Request Configuration" port="80"/>
     
     <!-- 
     <db:mysql-config name="MySQL_Configuration" host="${mysql.host}" port="${mysql.port}" user="${mysql.user}" password="${mysql.password}" database="${mysql.db}" doc:name="MySQL Configuration"/>
@@ -78,7 +78,7 @@ payload map ((payload01 , indexOfPayload01) -> {
         
 	  <logger level="INFO" doc:name="Logger" message="payload: #[payload]"/>
 	  
-      <http:request config-ref="HTTP_Request_Configuration" path="/contacts" method="POST" doc:name="HTTP"/>
+      <http:request config-ref="HTTP_Request_Configuration" path="/api/contacts" method="POST" doc:name="HTTP"/>
         
         
     </flow>
