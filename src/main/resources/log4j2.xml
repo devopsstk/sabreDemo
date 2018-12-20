@@ -16,6 +16,15 @@
             <SizeBasedTriggeringPolicy size="10 MB" />
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
+        <appender name="syslog" class="org.apache.log4j.net.SyslogAppender">
+			<param name="SyslogHost" value="127.0.0.1"/> 
+			<param name="Facility" value="USER"/> 
+			<param name="FacilityPrinting" value="true"/> 
+			<layout class="org.apache.log4j.PatternLayout">
+				<param name="ConversionPattern"
+					value="%t %5r %-5p %-21d{yyyyMMdd HH:mm:ss,SSS} %c{2} [%x] %m %n"/>
+			</layout>
+		</appender>
     </Appenders>
     <Loggers>
     	
@@ -44,7 +53,7 @@
         <AsyncLogger name="Tracking" level="WARN"/>
         
         <AsyncRoot level="INFO">
-            <AppenderRef ref="file" />
+            <AppenderRef ref="syslog" />
         </AsyncRoot>
     </Loggers>
 </Configuration>
