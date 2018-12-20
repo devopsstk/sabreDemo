@@ -21,7 +21,7 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
             </http:request-builder>
         </http:request>
         <object-to-string-transformer doc:name="http response to string" />
-        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(200))]" doc:name="assert that - http.status eq 200" />
+        <munit:assert-true message="The HTTP Status code is not correct!" condition="#[messageInboundProperty('http.status').is(eq(500))]" doc:name="assert that - http.status eq 200" />
         <set-property propertyName="expectedResult" value="#[getResource('scaffolder/response/get_200_contacts_application_json.json').asString()]" mimeType="application/json" doc:name="Expected result Property"/>
         <munit:run-custom assertion-ref="jsonAssertion" doc:name="assert that - payload is as expected"/>
 
